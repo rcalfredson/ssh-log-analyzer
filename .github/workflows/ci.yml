@@ -39,6 +39,11 @@ jobs:
         run: |
           pytest -q
 
+      - name: Lint with Black
+        run: |
+          pip install black
+          black --check .
+
       # Opcional: generar demo report y guardarlo como artefacto
       - name: Generate demo HTML report
         run: |
