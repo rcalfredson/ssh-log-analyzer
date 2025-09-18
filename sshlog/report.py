@@ -7,12 +7,15 @@ from jinja2 import Template
 
 console = Console()
 
+
 def print_cli(findings: Dict[str, Any]):
     failed = findings.get("failed_by_ip", pd.DataFrame())
     alerts: List[dict] = findings.get("alerts", [])
     meta = findings.get("meta", {})
 
-    console.rule(f"SSH Log Analyzer — window={meta.get('window')} threshold={meta.get('threshold')}")
+    console.rule(
+        f"SSH Log Analyzer — window={meta.get('window')} threshold={meta.get('threshold')}"
+    )
     if failed is not None and not failed.empty:
         t = Table(title="Top sources (failed logins)")
         for col in ["ip", "fails", "first_seen", "last_seen"]:
@@ -28,11 +31,18 @@ def print_cli(findings: Dict[str, Any]):
         for col in ["type", "ip", "user", "count", "first_seen", "last_seen"]:
             t2.add_column(col)
         for a in alerts:
-            t2.add_row(a.get("type",""), a.get("ip",""), str(a.get("user","")), str(a.get("count","")),
-                       str(a.get("first_seen","")), str(a.get("last_seen","")))
+            t2.add_row(
+                a.get("type", ""),
+                a.get("ip", ""),
+                str(a.get("user", "")),
+                str(a.get("count", "")),
+                str(a.get("first_seen", "")),
+                str(a.get("last_seen", "")),
+            )
         console.print(t2)
     else:
         console.print("[green]No alerts triggered.[/green]")
+
 
 def write_csv(findings: Dict[str, Any], base_path: str):
     failed = findings.get("failed_by_ip", pd.DataFrame())
@@ -46,11 +56,13 @@ def write_csv(findings: Dict[str, Any], base_path: str):
     if alerts is not None and not alerts.empty:
         alerts.to_csv(alerts_path, index=False)
 
+
 def write_html(findings: Dict[str, Any], out_path: str):
     failed = findings.get("failed_by_ip", pd.DataFrame())
     alerts = pd.DataFrame(findings.get("alerts", []))
 
-    tmpl = Template("""
+    tmpl = Template(
+        """
 <!doctype html>
 <html lang="en"><meta charset="utf-8">
 <title>SSH Log Analyzer Report</title>
@@ -83,7 +95,8 @@ def write_html(findings: Dict[str, Any], out_path: str):
 {% endfor %}
 </tbody></table>
 </html>
-""")
+"""
+    )
     html = tmpl.render(failed=failed, alerts=alerts, meta=findings.get("meta", {}))
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html)
