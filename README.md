@@ -1,5 +1,7 @@
 # SSH Log Analyzer
 
+[![CI](https://github.com/rcalfredson/ssh-log-analyzer/actions/workflows/ci.yml/badge.svg)](https://github.com/rcalfredson/ssh-log-analyzer/actions/workflows/ci.yml)
+
 A small, readable Python tool that parses Linux SSH logs (e.g., `/var/log/auth.log`) to spot failed logins, brute-force attempts, invalid users, and success-after-many-fails patterns. Outputs human-friendly summaries to the terminal, plus optional CSV/HTML reports.
 
 > Purpose: demonstrate practical security monitoring skills with clean code and clear documentation.
